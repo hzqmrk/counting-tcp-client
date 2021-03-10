@@ -65,7 +65,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	// receive time as initial exchange (hard-coded order is a problem)
-	tmp = read(sockfd, receiveBuff, RX_BUFF_SIZE - 1);
+	tmp = read(sockfd, receiveBuff, RX_BUFF_SIZE);
 	if (tmp < 0) {
 		printf("\n Error : Read error \n");
 		return 1;
@@ -107,7 +107,7 @@ int main(int argc, char *argv[]) {
 
 	// receive time as final exchange (hard-coded order is a problem)
 	memset(receiveBuff, 0, RX_BUFF_SIZE);
-	tmp = read(sockfd, receiveBuff, RX_BUFF_SIZE - 1);
+	tmp = read(sockfd, receiveBuff, RX_BUFF_SIZE);
 	if (tmp < 0) {
 		printf("\n Error : Read error \n");
 		return 1;
