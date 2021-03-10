@@ -13,6 +13,8 @@
 #define RX_BUFF_SIZE (1525)
 #define TX_BUFF_SIZE (1525)
 
+#define SLEEP_USECS (250000)
+
 #define END_LINK (9)
 
 int main(int argc, char *argv[]) {
@@ -23,8 +25,10 @@ int main(int argc, char *argv[]) {
 	int tmp = 0;
 	int cnt = 0;
 	int done = 0;
-	int one = 1;
 	time_t ticks;
+#if (QUICKACK ==1) || (NO_NAGLE ==1)
+	int one = 1;
+#endif
 
 	// verify args or usage
 	if (argc != 2) {
