@@ -6,8 +6,8 @@
 #include <netinet/tcp.h>
 #include <time.h>
 
-#define NO_NAGLE (1)
-#define QUICKACK (1)
+#define NO_NAGLE (0)
+#define QUICKACK (0)
 
 #define RX_BUFF_SIZE (1525)
 #define TX_BUFF_SIZE (1525)
@@ -93,11 +93,8 @@ int main(int argc, char *argv[]) {
 	cnt = 1;
 	while (!done) {
 
-		// send timer
+		// send count and time
 		memset(sendBuff, 0, TX_BUFF_SIZE);
-#if 0
-		sendBuff[0] = (unsigned char) cnt;
-#else
 		ticks = time(NULL);
 		snprintf(sendBuff, TX_BUFF_SIZE, "Sending %d at %.24s\n", cnt,
 				ctime(&ticks));
@@ -106,16 +103,7 @@ int main(int argc, char *argv[]) {
 			perror("\n Error : Unable to write all bytes or write error \n");
 		}
 		printf("%s", sendBuff);
-#endif
 
-#if 0
-		tmp = write(sockfd, sendBuff, TX_BUFF_SIZE);
-		if (tmp < 0) {
-			printf("\n Error : Write error \n");
-		}
-
-		printf("%02x \n", cnt);
-#endif
 		cnt++;
 
 		// wait a little before sending again
@@ -127,6 +115,8 @@ int main(int argc, char *argv[]) {
 		}
 
 	}
+
+	sleep(0.5);
 
 	// receive time as final exchange (hard-coded order is a problem)
 	memset(receiveBuff, 0, RX_BUFF_SIZE);
