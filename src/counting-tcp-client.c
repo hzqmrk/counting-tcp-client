@@ -4,6 +4,7 @@
 #include <string.h>
 #include <arpa/inet.h>
 #include <netinet/tcp.h>
+#include <time.h>
 
 #define NO_NAGLE (1)
 #define QUICKACK (1)
@@ -11,7 +12,7 @@
 #define RX_BUFF_SIZE (1525)
 #define TX_BUFF_SIZE (1525)
 
-#define END_LINK (10)
+#define END_LINK (9)
 
 int main(int argc, char *argv[]) {
 	int sockfd = 0;
@@ -22,6 +23,7 @@ int main(int argc, char *argv[]) {
 	int cnt = 0;
 	int done = 0;
 	int one = 1;
+	time_t ticks;
 
 	// verify args or usage
 	if (argc != 2) {
@@ -93,14 +95,27 @@ int main(int argc, char *argv[]) {
 
 		// send timer
 		memset(sendBuff, 0, TX_BUFF_SIZE);
+#if 0
 		sendBuff[0] = (unsigned char) cnt;
+#else
+		ticks = time(NULL);
+		snprintf(sendBuff, TX_BUFF_SIZE, "Sending %d at %.24s\n", cnt,
+				ctime(&ticks));
+		tmp = write(sockfd, sendBuff, TX_BUFF_SIZE);
+		if (tmp != TX_BUFF_SIZE) {
+			perror("\n Error : Unable to write all bytes or write error \n");
+		}
+		printf("%s", sendBuff);
+#endif
+
+#if 0
 		tmp = write(sockfd, sendBuff, TX_BUFF_SIZE);
 		if (tmp < 0) {
 			printf("\n Error : Write error \n");
 		}
 
 		printf("%02x \n", cnt);
-
+#endif
 		cnt++;
 
 		// wait a little before sending again
