@@ -6,6 +6,7 @@
 #include <netinet/tcp.h>
 
 #define NO_NAGLE (1)
+#define QUICKACK (1)
 
 #define RX_BUFF_SIZE (1525)
 #define TX_BUFF_SIZE (1525)
@@ -39,7 +40,7 @@ int main(int argc, char *argv[]) {
 #if (NO_NAGLE ==1)
 	// disable Nagle algorithm on socket to chunk small data
 	tmp = setsockopt(sockfd, SOL_TCP, TCP_NODELAY, &one, sizeof(one));
-	if (tmp	< 0) {
+	if (tmp < 0) {
 		printf("\n Error : Could not set socket option \n");
 		return 1;
 	}
@@ -52,7 +53,7 @@ int main(int argc, char *argv[]) {
 
 	// use argument 1 as the IP address to connect to
 	tmp = inet_pton(AF_INET, argv[1], &serv_addr.sin_addr);
-	if ( tmp <= 0) {
+	if (tmp <= 0) {
 		printf("\n Error : converting ip address \n");
 		return 1;
 	}
@@ -63,6 +64,15 @@ int main(int argc, char *argv[]) {
 		printf("\n Error : Connect Failed \n");
 		return 1;
 	}
+
+#if (QUICKACK ==1)
+	// don't wait to ack
+	tmp = setsockopt(sockfd, SOL_TCP, TCP_QUICKACK, &one, sizeof(one));
+	if (tmp < 0) {
+		printf("\n Error : Could not set socket option \n");
+		return 1;
+	}
+#endif
 
 	// receive time as initial exchange (hard-coded order is a problem)
 	tmp = read(sockfd, receiveBuff, RX_BUFF_SIZE);
@@ -97,11 +107,9 @@ int main(int argc, char *argv[]) {
 		sleep(0.5);
 
 		// check if we are done
-		if(cnt > END_LINK) {
+		if (cnt > END_LINK) {
 			done = 1;
 		}
-
-
 
 	}
 
