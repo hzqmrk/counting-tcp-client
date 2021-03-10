@@ -108,7 +108,7 @@ int main(int argc, char *argv[]) {
 		cnt++;
 
 		// wait a little before sending again
-		sleep(0.5);
+		sleep(2);
 
 		// check if we are done
 		if (cnt > END_LINK) {
@@ -117,7 +117,7 @@ int main(int argc, char *argv[]) {
 
 	}
 
-	sleep(0.5);
+	sleep(1);
 
 	// receive time as final exchange (hard-coded order is a problem)
 	memset(receiveBuff, 0, RX_BUFF_SIZE);
