@@ -9,6 +9,7 @@
 #define NO_NAGLE (0)
 #define QUICKACK (0)
 
+#define TCP_PORT (5127)
 #define RX_BUFF_SIZE (1525)
 #define TX_BUFF_SIZE (1525)
 
@@ -51,7 +52,7 @@ int main(int argc, char *argv[]) {
 	// initialize server context
 	memset(&serv_addr, 0, sizeof(serv_addr));
 	serv_addr.sin_family = AF_INET;
-	serv_addr.sin_port = htons(5000);
+	serv_addr.sin_port = htons(TCP_PORT);
 
 	// use argument 1 as the IP address to connect to
 	tmp = inet_pton(AF_INET, argv[1], &serv_addr.sin_addr);
